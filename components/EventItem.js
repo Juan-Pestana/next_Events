@@ -16,7 +16,7 @@ export default function EventItem({evt}) {
                 <h3>{evt.name}</h3>
             </div>
             <div className={styles.link}>
-                <Link href={`events/${evt.slug}`}>
+                <Link href={`/events/${evt.slug}`}>
                     <a className='btn'>Mas Info</a>
                 </Link>
             </div>
