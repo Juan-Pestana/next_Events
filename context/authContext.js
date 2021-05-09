@@ -1,6 +1,6 @@
 import {createContext, useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
-import {NEXT_URL} from '@/config/index'
+import {API_URL, NEXT_URL} from '@/config/index'
 
 
 const AuthContext = createContext()
@@ -8,12 +8,44 @@ const AuthContext = createContext()
 export const AuthContextProvider = ({children}) => {
 
     const [user, setUser] = useState(null)
+    const [ready, setReady] = useState(false)
     const [error, setError] = useState(null)
+
+    useEffect(()=> {
+        
+        checkUserLoggedIn()
+
+        
+    }, [])
+
+    const router = useRouter()
 
     //Register User
 
     const register = async (user) =>{
-        console.log(user)
+        const res = await fetch(`${NEXT_URL}/api/register`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        const data = await res.json()
+
+        
+        
+
+        if(res.ok){
+           
+            setUser(data.user)
+            router.push('/account/dashboard')
+           
+        }else{
+          
+            setError(data.message)
+            setError(null)
+            
+        }
     }
 
     // Login User
@@ -32,26 +64,49 @@ export const AuthContextProvider = ({children}) => {
         })
         const data = await res.json()
 
-        console.log(data)
+        
+        
 
         if(res.ok){
+            setReady(true)
             setUser(data.user)
+            router.push('/account/dashboard')
+           
         }else{
+            setReady(true)
             setError(data.message)
             setError(null)
+            
         }
     }
 
     // Logout User
 
     const logout = async () =>{
-        console.log('login out')
+        const res = await fetch(`${NEXT_URL}/api/logout`, {
+            method: 'POST'
+        })
+
+        if(res.ok){
+            setUser(null)
+            router.push('/')
+        }
     }
 
     // Check if user is logged in
 
     const checkUserLoggedIn = async (user) =>{
-        console.log('check')
+        const res= await fetch(`${NEXT_URL}/api/user`)
+        const data = await res.json()
+
+        if(res.ok){
+            setReady(true)
+            setUser(data.user)
+
+        }else{
+            setReady(true)
+            setUser(null)
+        }
     }
 
 
@@ -60,6 +115,7 @@ export const AuthContextProvider = ({children}) => {
             value={{
                 user,
                 error,
+                ready,
                 register,
                 login,
                 logout

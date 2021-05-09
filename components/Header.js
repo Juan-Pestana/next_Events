@@ -7,7 +7,7 @@ import Search from '@/components/Search'
 
 export default function Header() {
 
-    const {user, logout} = useContext(AuthContext)
+    const {user, logout, ready} = useContext(AuthContext)
 
     return (
         <header className={styles.header}>
@@ -17,49 +17,55 @@ export default function Header() {
                 </Link>
             </div>
             <Search/>
-            <nav>
-                <ul>
-                    <li>
-                        <Link href='/events'>
-                            <a>Eventos</a>
-                        </Link>
-                    </li>
 
-                    {user ? 
-                    //si logged in
-                    <>
+                <nav>
+                {ready ? 
+                    <ul>
                         <li>
-                            <Link href='/events/add'>
-                                <a>Crea un Evento</a>
+                            <Link href='/events'>
+                                <a>Eventos</a>
                             </Link>
                         </li>
-                        <li>
-                            <Link href='/account/dashboard'>
-                                <a>Dashboard</a>
-                            </Link>
-                        </li>
-                        <li>
-                            
-                            <button 
-                                className='btn-secondary btn-icon'
-                                onClick={()=> logout()}><FaSignOutAlt/> Log Out</button>
-                            
-                        </li>        
-                    </> : 
-                    //si logged out
-                    <>
-                    
-                        <li>
-                            <Link href='/account/login'>
-                                <a className='btn-secondary btn-icon'><FaSignInAlt/> Log In</a>
-                            </Link>
-                        </li>
-                    
-                    </>}
-                    
-                    
-                </ul>
-            </nav>
+
+                        {user ? 
+                        //si logged in
+                        <>
+                            <li>
+                                <Link href='/events/add'>
+                                    <a>Crea un Evento</a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href='/account/dashboard'>
+                                    <a>Dashboard</a>
+                                </Link>
+                            </li>
+                            <li>
+                                
+                                <button 
+                                    className='btn-secondary btn-icon'
+                                    onClick={()=> logout()}><FaSignOutAlt/> Log Out</button>
+                                
+                            </li>        
+                        </> : 
+                        //si logged out
+                        <>
+                        
+                            <li>
+                                <Link href='/account/login'>
+                                    <a className='btn-secondary btn-icon'><FaSignInAlt/> Log In</a>
+                                </Link>
+                            </li>
+                        
+                        </>}
+                        
+                        
+                    </ul> : null
+            }
+                </nav>
+            
+            
+            
             
         </header>
     )
